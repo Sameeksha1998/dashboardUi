@@ -1,0 +1,95 @@
+{
+    "users": [
+      {
+        "id": "user1",
+        "name": "Alice Johnson"
+      },
+      {
+        "id": "user2",
+        "name": "Bob Smith"
+      },
+      {
+        "id": "user3",
+        "name": "Carol Lee"
+      }
+    ],
+    "dashboardData": {
+      "user1": [
+        {
+          "date": "2024-11-15",
+          "sector": "Retail",
+          "category": "Snacks",
+          "country": "USA",
+          "spend": 1500,
+          "reference": 1300,
+          "percentChange": 15.38,
+          "absoluteChange": 200
+        },
+        {
+          "date": "2024-12-01",
+          "sector": "Food",
+          "category": "Juice",
+          "country": "Canada",
+          "spend": 900,
+          "reference": 1100,
+          "percentChange": -18.18,
+          "absoluteChange": -200
+        },
+        {
+          "date": "2025-01-05",
+          "sector": "Industrial",
+          "category": "Snacks",
+          "country": "USA",
+          "spend": 3000,
+          "reference": 2800,
+          "percentChange": 7.14,
+          "absoluteChange": 200
+        }
+      ],
+      "user2": [
+        {
+          "date": "2025-02-10",
+          "sector": "Retail",
+          "category": "Juice",
+          "country": "India",
+          "spend": 1800,
+          "reference": 1700,
+          "percentChange": 5.88,
+          "absoluteChange": 100
+        },
+        {
+          "date": "2025-03-01",
+          "sector": "Food",
+          "category": "Snacks",
+          "country": "USA",
+          "spend": 1200,
+          "reference": 1000,
+          "percentChange": 20,
+          "absoluteChange": 200
+        }
+      ],
+      "user3": [
+        {
+          "date": "2025-03-15",
+          "sector": "Industrial",
+          "category": "Juice",
+          "country": "UK",
+          "spend": 1000,
+          "reference": 1000,
+          "percentChange": 0,
+          "absoluteChange": 0
+        },
+        {
+          "date": "2025-04-01",
+          "sector": "Retail",
+          "category": "Snacks",
+          "country": "USA",
+          "spend": 2000,
+          "reference": 2500,
+          "percentChange": -20,
+          "absoluteChange": -500
+        }
+      ]
+    }
+  }
+  
