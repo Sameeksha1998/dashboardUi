@@ -1,0 +1,324 @@
+{
+   "users" : [
+    {
+      "id": "user1",
+      "name": "Alice Johnson",
+      "image": "https://randomuser.me/api/portraits/women/1.jpg"
+    },
+    {
+      "id": "user2",
+      "name": "Bob Smith",
+      "image": "https://randomuser.me/api/portraits/men/1.jpg"
+    },
+    {
+      "id": "user3",
+      "name": "Carol Lee",
+      "image": "https://randomuser.me/api/portraits/women/2.jpg"
+    },
+    {
+      "id": "user4",
+      "name": "Patrick Lee",
+      "image": "https://randomuser.me/api/portraits/men/2.jpg"
+    },
+    {
+      "id": "user5",
+      "name": "Ossime Jarem",
+      "image": "https://randomuser.me/api/portraits/men/3.jpg"
+    }
+  ],
+  
+    "dashboardData": {
+        "user1": [
+          {
+            "date": "2024-11-15",
+            "sector": "Retail",
+            "category": "Snacks",
+            "country": "USA",
+            "spend": 1500,
+            "reference": 1300,
+            "percentChange": 15.38,
+            "absoluteChange": 200
+          },
+          {
+            "date": "2024-12-01",
+            "sector": "Food",
+            "category": "Juice",
+            "country": "Canada",
+            "spend": 900,
+            "reference": 1100,
+            "percentChange": -18.18,
+            "absoluteChange": -200
+          },
+          {
+            "date": "2025-01-05",
+            "sector": "Industrial",
+            "category": "Snacks",
+            "country": "USA",
+            "spend": 3000,
+            "reference": 2800,
+            "percentChange": 7.14,
+            "absoluteChange": 200
+          },
+          {
+            "date": "2025-02-10",
+            "sector": "Retail",
+            "category": "Juice",
+            "country": "India",
+            "spend": 1800,
+            "reference": 1700,
+            "percentChange": 5.88,
+            "absoluteChange": 100
+          },
+          {
+            "date": "2025-03-01",
+            "sector": "Food",
+            "category": "Snacks",
+            "country": "USA",
+            "spend": 1200,
+            "reference": 1000,
+            "percentChange": 20,
+            "absoluteChange": 200
+          },
+          {
+            "date": "2025-04-01",
+            "sector": "Retail",
+            "category": "Snacks",
+            "country": "Canada",
+            "spend": 2200,
+            "reference": 2100,
+            "percentChange": 4.76,
+            "absoluteChange": 100
+          },
+          {
+            "date": "2025-05-10",
+            "sector": "Food",
+            "category": "Juice",
+            "country": "Australia",
+            "spend": 1400,
+            "reference": 1300,
+            "percentChange": 7.69,
+            "absoluteChange": 100
+          }
+        ],
+        "user2": [
+          {
+            "date": "2025-02-10",
+            "sector": "Retail",
+            "category": "Juice",
+            "country": "India",
+            "spend": 1800,
+            "reference": 1700,
+            "percentChange": 5.88,
+            "absoluteChange": 100
+          },
+          {
+            "date": "2025-03-01",
+            "sector": "Food",
+            "category": "Snacks",
+            "country": "USA",
+            "spend": 1200,
+            "reference": 1000,
+            "percentChange": 20,
+            "absoluteChange": 200
+          },
+          {
+            "date": "2025-03-10",
+            "sector": "Retail",
+            "category": "Snacks",
+            "country": "UK",
+            "spend": 1700,
+            "reference": 1600,
+            "percentChange": 6.25,
+            "absoluteChange": 100
+          },
+          {
+            "date": "2025-04-01",
+            "sector": "Industrial",
+            "category": "Juice",
+            "country": "USA",
+            "spend": 2500,
+            "reference": 2400,
+            "percentChange": 4.17,
+            "absoluteChange": 100
+          },
+          {
+            "date": "2025-05-15",
+            "sector": "Food",
+            "category": "Juice",
+            "country": "Canada",
+            "spend": 1300,
+            "reference": 1200,
+            "percentChange": 8.33,
+            "absoluteChange": 100
+          }
+        ],
+        "user3": [
+          {
+            "date": "2025-03-15",
+            "sector": "Industrial",
+            "category": "Juice",
+            "country": "UK",
+            "spend": 1000,
+            "reference": 1000,
+            "percentChange": 0,
+            "absoluteChange": 0
+          },
+          {
+            "date": "2025-04-01",
+            "sector": "Retail",
+            "category": "Snacks",
+            "country": "USA",
+            "spend": 2000,
+            "reference": 2500,
+            "percentChange": -20,
+            "absoluteChange": -500
+          },
+          {
+            "date": "2025-04-10",
+            "sector": "Retail",
+            "category": "Juice",
+            "country": "USA",
+            "spend": 2200,
+            "reference": 2300,
+            "percentChange": -4.35,
+            "absoluteChange": -100
+          },
+          {
+            "date": "2025-05-05",
+            "sector": "Food",
+            "category": "Snacks",
+            "country": "India",
+            "spend": 1800,
+            "reference": 1600,
+            "percentChange": 12.5,
+            "absoluteChange": 200
+          },
+          {
+            "date": "2025-06-01",
+            "sector": "Industrial",
+            "category": "Snacks",
+            "country": "USA",
+            "spend": 3000,
+            "reference": 2800,
+            "percentChange": 7.14,
+            "absoluteChange": 200
+          }
+        ],
+        "user4": [
+          {
+            "date": "2025-05-10",
+            "sector": "Retail",
+            "category": "Snacks",
+            "country": "UK",
+            "spend": 1600,
+            "reference": 1500,
+            "percentChange": 6.67,
+            "absoluteChange": 100
+          },
+          {
+            "date": "2025-06-01",
+            "sector": "Food",
+            "category": "Juice",
+            "country": "Canada",
+            "spend": 1300,
+            "reference": 1200,
+            "percentChange": 8.33,
+            "absoluteChange": 100
+          },
+          {
+            "date": "2025-06-10",
+            "sector": "Retail",
+            "category": "Snacks",
+            "country": "USA",
+            "spend": 1900,
+            "reference": 1800,
+            "percentChange": 5.56,
+            "absoluteChange": 100
+          },
+          {
+            "date": "2025-07-01",
+            "sector": "Food",
+            "category": "Juice",
+            "country": "Australia",
+            "spend": 1400,
+            "reference": 1300,
+            "percentChange": 7.69,
+            "absoluteChange": 100
+          },
+          {
+            "date": "2025-07-15",
+            "sector": "Retail",
+            "category": "Snacks",
+            "country": "India",
+            "spend": 1700,
+            "reference": 1600,
+            "percentChange": 6.25,
+            "absoluteChange": 100
+          },
+          {
+            "date": "2025-08-01",
+            "sector": "Food",
+            "category": "Snacks",
+            "country": "USA",
+            "spend": 2200,
+            "reference": 2100,
+            "percentChange": 4.76,
+            "absoluteChange": 100
+          }
+        ],
+        "user5": [
+          {
+            "date": "2025-07-01",
+            "sector": "Industrial",
+            "category": "Juice",
+            "country": "Australia",
+            "spend": 2200,
+            "reference": 2100,
+            "percentChange": 4.76,
+            "absoluteChange": 100
+          },
+          {
+            "date": "2025-08-15",
+            "sector": "Retail",
+            "category": "Snacks",
+            "country": "India",
+            "spend": 1700,
+            "reference": 1600,
+            "percentChange": 6.25,
+            "absoluteChange": 100
+          },
+          {
+            "date": "2025-09-01",
+            "sector": "Food",
+            "category": "Juice",
+            "country": "Canada",
+            "spend": 1900,
+            "reference": 1800,
+            "percentChange": 5.56,
+            "absoluteChange": 100
+          },
+          {
+            "date": "2025-09-10",
+            "sector": "Retail",
+            "category": "Juice",
+            "country": "USA",
+            "spend": 2100,
+            "reference": 2000,
+            "percentChange": 5,
+            "absoluteChange": 100
+          },
+          {
+            "date": "2025-09-15",
+            "sector": "Industrial",
+            "category": "Snacks",
+            "country": "USA",
+            "spend": 2500,
+            "reference": 2400,
+            "percentChange": 4.17,
+            "absoluteChange": 100
+          }
+        ]
+      
+    }
+  }
+  
