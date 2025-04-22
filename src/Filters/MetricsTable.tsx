@@ -21,8 +21,16 @@ interface Props {
 
 type Order = 'asc' | 'desc';
 
+const attributeMap: { [key: number]: keyof DashboardEntry } = {
+  1: 'country',
+  2: 'state',
+  3: 'city',
+  4: 'sector',
+  5: 'category',
+};
+
 interface Column {
-  id: keyof DashboardEntry;
+  id: number;
   label: string;
   visible: boolean;
 }
@@ -82,11 +90,11 @@ const MetricsTable: React.FC<Props> = ({
   const paginatedData = sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   const attributeColumns: Column[] = [
-    { id: 'country', label: 'Country', visible: selectedAttributes.includes('Country') },
-    { id: 'state', label: 'State', visible: selectedAttributes.includes('State') },
-    { id: 'city', label: 'City', visible: selectedAttributes.includes('City') },
-    { id: 'sector', label: 'Sector', visible: true },
-    { id: 'category', label: 'Category', visible: true },
+    { id: 1, label: 'Country', visible: selectedAttributes.includes('Country') },
+    { id: 2, label: 'State', visible: selectedAttributes.includes('State') },
+    { id: 3, label: 'City', visible: selectedAttributes.includes('City') },
+    { id: 4, label: 'Sector', visible: true },
+    { id: 5, label: 'Category', visible: true },
   ].filter(col => col.visible);
 
   const metricsToShow = selectedMetrics.length > 0
@@ -104,17 +112,20 @@ const MetricsTable: React.FC<Props> = ({
         <Table>
           <TableHead>
             <TableRow>
-              {attributeColumns.map((column) => (
-                <TableCell key={column.id as string}>
-                  <TableSortLabel
-                    active={orderBy === column.id}
-                    direction={orderBy === column.id ? order : 'asc'}
-                    onClick={() => handleRequestSort(column.id as string)}
-                  >
-                    {column.label}
-                  </TableSortLabel>
-                </TableCell>
-              ))}
+              {attributeColumns.map((column) => {
+                const columnKey = attributeMap[column.id];
+                return (
+                  <TableCell key={column.label}>
+                    <TableSortLabel
+                      active={orderBy === columnKey}
+                      direction={orderBy === columnKey ? order : 'asc'}
+                      onClick={() => handleRequestSort(columnKey)}
+                    >
+                      {column.label}
+                    </TableSortLabel>
+                  </TableCell>
+                );
+              })}
               {metricsToShow.map((metric) => (
                 <TableCell colSpan={4} key={metric as string} align="center">
                   {formatMetricName(metric as string)}
@@ -123,44 +134,51 @@ const MetricsTable: React.FC<Props> = ({
             </TableRow>
             <TableRow>
               {attributeColumns.map((column) => (
-                <TableCell key={`${column.id}-header`} />
+                <TableCell key={`${column.label}-spacer`} />
               ))}
               {metricsToShow.flatMap((metric) =>
-                metricFields.map((field) => (
-                  <TableCell key={`${metric as string}-${field}`}>
-                    <TableSortLabel
-                      active={orderBy === `${metric as string}.${field}`}
-                      direction={orderBy === `${metric as string}.${field}` ? order : 'asc'}
-                      onClick={() => handleRequestSort(`${metric as string}.${field}`)}
-                    >
-                      {field === 'absoluteChange' ? 'Δ Abs' : field === 'percentChange' ? 'Δ %' : formatMetricName(field)}
-                    </TableSortLabel>
-                  </TableCell>
-                ))
+                metricFields.map((field) => {
+                  const sortKey = `${metric as string}.${field}`;
+                  return (
+                    <TableCell key={sortKey}>
+                      <TableSortLabel
+                        active={orderBy === sortKey}
+                        direction={orderBy === sortKey ? order : 'asc'}
+                        onClick={() => handleRequestSort(sortKey)}
+                      >
+                        {field === 'absoluteChange' ? 'Δ Abs' : field === 'percentChange' ? 'Δ %' : formatMetricName(field)}
+                      </TableSortLabel>
+                    </TableCell>
+                  );
+                })
               )}
             </TableRow>
           </TableHead>
           <TableBody>
             {paginatedData.map((row, index) => (
               <TableRow hover key={index}>
-                {attributeColumns.map((column) => (
-                  <TableCell key={`${column.id}-${index}`}>
-                    {row[column.id] as React.ReactNode}
-                  </TableCell>
-                ))}
+                {attributeColumns.map((column) => {
+                  const key = attributeMap[column.id];
+                  return (
+                    <TableCell key={`${column.label}-${index}`}>
+                      {row[key] as string}
+                    </TableCell>
+                  );
+                })}
                 {metricsToShow.flatMap((metric) => {
                   const metricData = row[metric] as MetricData | undefined;
-                  return metricFields.map((field) => (
-                    <TableCell key={`${metric as string}-${field}-${index}`}>
-                      {metricData?.[field] != null 
-                        ? field.includes('Change') 
+                  return metricFields.map((field) => {
+                    const value = metricData?.[field];
+                    return (
+                      <TableCell key={`${metric as string}-${field}-${index}`}>
+                        {value != null
                           ? field === 'percentChange'
-                            ? `${metricData[field].toFixed(2)}%`
-                            : `$${metricData[field].toLocaleString()}`
-                          : `$${metricData[field].toLocaleString()}`
-                        : '-'}
-                    </TableCell>
-                  ));
+                            ? `${value.toFixed(2)}%`
+                            : `$${value.toLocaleString()}`
+                          : '-'}
+                      </TableCell>
+                    );
+                  });
                 })}
               </TableRow>
             ))}
@@ -172,7 +190,7 @@ const MetricsTable: React.FC<Props> = ({
         count={groupedData.length}
         page={page}
         rowsPerPage={rowsPerPage}
-        onPageChange={(_: unknown, newPage: number) => setPage(newPage)}
+        onPageChange={(_, newPage: number) => setPage(newPage)}
         onRowsPerPageChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           setRowsPerPage(parseInt(e.target.value, 10));
           setPage(0);
