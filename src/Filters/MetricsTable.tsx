@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Table,
   TableBody,
@@ -10,81 +10,93 @@ import {
   TableSortLabel,
   TablePagination,
 } from '@mui/material';
-
-interface DashboardEntry {
-  sector: string;
-  category: string;
-  spend: number;
-  percentChange: number;
-  absoluteChange: number;
-  date: string;
-}
+import { DashboardEntry, MetricData } from '../types';
 
 interface Props {
   data: DashboardEntry[];
+  selectedMetrics: (keyof DashboardEntry)[];
+  selectedAttributes: string[];
+  groupedData: DashboardEntry[];
 }
 
-const MetricsTable: React.FC<Props> = ({ data }) => {
-  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
-  const [orderBy, setOrderBy] = useState<keyof DashboardEntry>('sector');
+type Order = 'asc' | 'desc';
+
+interface Column {
+  id: keyof DashboardEntry;
+  label: string;
+  visible: boolean;
+}
+
+type MetricField = 'current' | 'reference' | 'absoluteChange' | 'percentChange';
+
+const MetricsTable: React.FC<Props> = ({
+  selectedMetrics,
+  selectedAttributes,
+  groupedData,
+}) => {
+  const [order, setOrder] = useState<Order>('asc');
+  const [orderBy, setOrderBy] = useState<string>('sector');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  // Handle sorting logic
-  const handleRequestSort = (property: keyof DashboardEntry) => {
+  const handleRequestSort = (property: string) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
-  // Compare string values (for 'sector' and 'category')
-  const compareStrings = (a: string, b: string) => {
-    if (a < b) return order === 'asc' ? -1 : 1;
-    if (a > b) return order === 'asc' ? 1 : -1;
-    return 0;
-  };
 
-  // Compare numerical values (for 'spend', '% change', 'absolute change')
-  const compareNumbers = (a: number, b: number) => {
-    if (a < b) return order === 'asc' ? -1 : 1;
-    if (a > b) return order === 'asc' ? 1 : -1;
-    return 0;
-  };
+  const sortedData = useMemo(() => {
+    return [...groupedData].sort((a, b) => {
+      if (orderBy.includes('.')) {
+        const [metric, prop] = orderBy.split('.') as [keyof DashboardEntry, MetricField];
+        const aMetric = a[metric] as MetricData | undefined;
+        const bMetric = b[metric] as MetricData | undefined;
+        const aValue = aMetric?.[prop];
+        const bValue = bMetric?.[prop];
 
-  // Handle page change for pagination
-  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-    setPage(newPage);
-  };
-
-  // Handle rows per page change
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  // Get sorted data and paginate
-
-  const sortData = (array: DashboardEntry[]) => {
-    return array.sort((a, b) => {
-      if (orderBy === 'sector' || orderBy === 'category') {
-        return compareStrings(a[orderBy], b[orderBy]);
+        if (typeof aValue === 'number' && typeof bValue === 'number') {
+          return order === 'asc' ? aValue - bValue : bValue - aValue;
+        }
+        return 0;
       }
-  
-      // Ensure the values are numbers before calling compareNumbers
-      const aValue = a[orderBy];
-      const bValue = b[orderBy];
-  
-      if (typeof aValue === 'number' && typeof bValue === 'number') {
-        return compareNumbers(aValue, bValue);
+
+      if (orderBy === 'dateRange') {
+        const aValue = new Date(a.startDate).getTime();
+        const bValue = new Date(b.startDate).getTime();
+        return order === 'asc' ? aValue - bValue : bValue - aValue;
       }
-  
-      // If values are not numbers, you can either return 0 or handle this case as needed
-      return 0; // Or handle it differently based on your use case
+
+      const aValue = a[orderBy as keyof DashboardEntry];
+      const bValue = b[orderBy as keyof DashboardEntry];
+
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        return order === 'asc'
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue);
+      }
+
+      return 0;
     });
-  };
+  }, [groupedData, order, orderBy]);
 
-  
-  const sortedData = sortData(data);
   const paginatedData = sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
+  const attributeColumns: Column[] = [
+    { id: 'country', label: 'Country', visible: selectedAttributes.includes('Country') },
+    { id: 'state', label: 'State', visible: selectedAttributes.includes('State') },
+    { id: 'city', label: 'City', visible: selectedAttributes.includes('City') },
+    { id: 'sector', label: 'Sector', visible: true },
+    { id: 'category', label: 'Category', visible: true },
+  ].filter(col => col.visible);
+
+  const metricsToShow = selectedMetrics.length > 0
+    ? selectedMetrics
+    : ['mySpend', 'sameStoreSpend', 'newStoreSpend', 'lostStoreSpend'] as (keyof DashboardEntry)[];
+
+  const formatMetricName = (metric: string) =>
+    metric.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+
+  const metricFields: MetricField[] = ['current', 'reference', 'absoluteChange', 'percentChange'];
 
   return (
     <Paper sx={{ mt: 2 }}>
@@ -92,84 +104,80 @@ const MetricsTable: React.FC<Props> = ({ data }) => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>
-                <TableSortLabel
-                  active={orderBy === 'sector'}
-                  direction={orderBy === 'sector' ? order : 'asc'}
-                  onClick={() => handleRequestSort('sector')}
-                >
-                  Sector
-                </TableSortLabel>
-              </TableCell>
-              <TableCell>
-                <TableSortLabel
-                  active={orderBy === 'category'}
-                  direction={orderBy === 'category' ? order : 'asc'}
-                  onClick={() => handleRequestSort('category')}
-                >
-                  Category
-                </TableSortLabel>
-              </TableCell>
-              <TableCell>
-                <TableSortLabel
-                  active={orderBy === 'spend'}
-                  direction={orderBy === 'spend' ? order : 'asc'}
-                  onClick={() => handleRequestSort('spend')}
-                >
-                  Spend ($)
-                </TableSortLabel>
-              </TableCell>
-              <TableCell>
-                <TableSortLabel
-                  active={orderBy === 'percentChange'}
-                  direction={orderBy === 'percentChange' ? order : 'asc'}
-                  onClick={() => handleRequestSort('percentChange')}
-                >
-                  % Change
-                </TableSortLabel>
-              </TableCell>
-              <TableCell>
-                <TableSortLabel
-                  active={orderBy === 'absoluteChange'}
-                  direction={orderBy === 'absoluteChange' ? order : 'asc'}
-                  onClick={() => handleRequestSort('absoluteChange')}
-                >
-                  Absolute Change
-                </TableSortLabel>
-              </TableCell>
-              <TableCell>
-                <TableSortLabel
-                  active={orderBy === 'date'}
-                  direction={orderBy === 'date' ? order : 'asc'}
-                  onClick={() => handleRequestSort('date')}
-                >
-                  Date
-                </TableSortLabel>
-              </TableCell>
+              {attributeColumns.map((column) => (
+                <TableCell key={column.id as string}>
+                  <TableSortLabel
+                    active={orderBy === column.id}
+                    direction={orderBy === column.id ? order : 'asc'}
+                    onClick={() => handleRequestSort(column.id as string)}
+                  >
+                    {column.label}
+                  </TableSortLabel>
+                </TableCell>
+              ))}
+              {metricsToShow.map((metric) => (
+                <TableCell colSpan={4} key={metric as string} align="center">
+                  {formatMetricName(metric as string)}
+                </TableCell>
+              ))}
+            </TableRow>
+            <TableRow>
+              {attributeColumns.map((column) => (
+                <TableCell key={`${column.id}-header`} />
+              ))}
+              {metricsToShow.flatMap((metric) =>
+                metricFields.map((field) => (
+                  <TableCell key={`${metric as string}-${field}`}>
+                    <TableSortLabel
+                      active={orderBy === `${metric as string}.${field}`}
+                      direction={orderBy === `${metric as string}.${field}` ? order : 'asc'}
+                      onClick={() => handleRequestSort(`${metric as string}.${field}`)}
+                    >
+                      {field === 'absoluteChange' ? 'Δ Abs' : field === 'percentChange' ? 'Δ %' : formatMetricName(field)}
+                    </TableSortLabel>
+                  </TableCell>
+                ))
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedData.map((row) => (
-              <TableRow hover key={row.date + row.category}>
-                <TableCell>{row.sector}</TableCell>
-                <TableCell>{row.category}</TableCell>
-                <TableCell>{row.spend}</TableCell>
-                <TableCell>{row.percentChange}%</TableCell>
-                <TableCell>{row.absoluteChange}</TableCell>
-                <TableCell>{row.date}</TableCell>
+            {paginatedData.map((row, index) => (
+              <TableRow hover key={index}>
+                {attributeColumns.map((column) => (
+                  <TableCell key={`${column.id}-${index}`}>
+                    {row[column.id] as React.ReactNode}
+                  </TableCell>
+                ))}
+                {metricsToShow.flatMap((metric) => {
+                  const metricData = row[metric] as MetricData | undefined;
+                  return metricFields.map((field) => (
+                    <TableCell key={`${metric as string}-${field}-${index}`}>
+                      {metricData?.[field] != null 
+                        ? field.includes('Change') 
+                          ? field === 'percentChange'
+                            ? `${metricData[field].toFixed(2)}%`
+                            : `$${metricData[field].toLocaleString()}`
+                          : `$${metricData[field].toLocaleString()}`
+                        : '-'}
+                    </TableCell>
+                  ));
+                })}
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={data.length}
-        rowsPerPage={rowsPerPage}
+        count={groupedData.length}
         page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
+        rowsPerPage={rowsPerPage}
+        onPageChange={(_: unknown, newPage: number) => setPage(newPage)}
+        onRowsPerPageChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          setRowsPerPage(parseInt(e.target.value, 10));
+          setPage(0);
+        }}
+        rowsPerPageOptions={[5, 10, 25]}
       />
     </Paper>
   );

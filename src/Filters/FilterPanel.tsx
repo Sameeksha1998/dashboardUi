@@ -3,6 +3,7 @@ import { Box, FormControl, InputLabel, Select, MenuItem, OutlinedInput, Checkbox
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { subMonths, isAfter } from 'date-fns';
+import { SelectedMetric, attributeOptions, categories, metrics, sectors } from '../types';
 
 interface Props {
   dateRange: [Date | null, Date | null];
@@ -14,15 +15,9 @@ interface Props {
   selectedAttributes: string[];
   setSelectedAttributes: (value: string[]) => void;
   selectedMetrics: string[];
-  setSelectedMetrics: (value: string[]) => void;
+  setSelectedMetrics: (value: SelectedMetric[]) => void;
+  tab: number
 }
-
-const metricOptions = ['Spend', 'Reference', 'PercentChange', 'AbsoluteChange'];
-const attributeOptions = ['Country', 'Sector', 'Category'];
-
-const sectors = ['Retail', 'Food', 'Industrial']; // Updated sectors
-const categories = ['Juice', 'Snacks', 'Beverages', 'Packaged Foods']; // Updated categories
-
 const FilterPanel: React.FC<Props> = ({
   dateRange,
   setDateRange,
@@ -34,10 +29,13 @@ const FilterPanel: React.FC<Props> = ({
   setSelectedAttributes,
   selectedMetrics,
   setSelectedMetrics,
+  tab
 }) => {
   // Date range settings
   const minDate = subMonths(new Date(), 12);
   const maxDate = new Date();
+
+  
 
   return (
     <Box display="flex" flexWrap="wrap" gap={3} mt={2}>
@@ -56,7 +54,7 @@ const FilterPanel: React.FC<Props> = ({
             minDate={minDate}
             maxDate={maxDate}
             disableFuture
-           // renderInput={(params) => <TextField {...params} />}
+          // renderInput={(params) => <TextField {...params} />}
           />
           <DatePicker
             label="End Date"
@@ -70,7 +68,7 @@ const FilterPanel: React.FC<Props> = ({
             minDate={minDate}
             maxDate={maxDate}
             disableFuture
-            //renderInput={(params) => <TextField {...params} />}
+          //renderInput={(params) => <TextField {...params} />}
           />
         </Box>
       </LocalizationProvider>
@@ -117,7 +115,13 @@ const FilterPanel: React.FC<Props> = ({
           value={selectedAttributes}
           onChange={(e) => setSelectedAttributes(e.target.value as string[])}
           input={<OutlinedInput label="Attributes" />}
-          renderValue={(selected) => selected.join(', ')}
+          //renderValue={(selected) => selected.join(', ')}
+          renderValue={(selected) =>
+            (selected as string[])
+              .map((value) => attributeOptions.find((m) => m === value))
+              .join(', ')
+          }
+          
         >
           {attributeOptions.map((name) => (
             <MenuItem key={name} value={name}>
@@ -129,23 +133,30 @@ const FilterPanel: React.FC<Props> = ({
       </FormControl>
 
       {/* Metric Multi-select */}
+      
       <FormControl sx={{ minWidth: 200 }}>
-        <InputLabel>Metrics</InputLabel>
-        <Select
-          multiple
-          value={selectedMetrics}
-          onChange={(e) => setSelectedMetrics(e.target.value as string[])}
-          input={<OutlinedInput label="Metrics" />}
-          renderValue={(selected) => selected.join(', ')}
-        >
-          {metricOptions.map((name) => (
-            <MenuItem key={name} value={name}>
-              <Checkbox checked={selectedMetrics.indexOf(name) > -1} />
-              <ListItemText primary={name} />
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+  <InputLabel id="metric-selector-label" >Metrics</InputLabel>
+  <Select
+    labelId="metric-selector-label"
+    multiple
+    input={<OutlinedInput label="Metrics" />}
+    value={selectedMetrics}
+    onChange={(e) => setSelectedMetrics(e.target.value as SelectedMetric[])}
+    renderValue={(selected) =>
+      (selected as string[])
+        .map((value) => metrics.find((m) => m.value === value)?.label)
+        .join(', ')
+    }
+  >
+    {metrics.map((metric) => (
+      <MenuItem key={metric.value} value={metric.value}>
+        <Checkbox checked={selectedMetrics.indexOf(metric.value) > -1} />
+        <ListItemText primary={metric.label} />
+      </MenuItem>
+    ))}
+  </Select>
+</FormControl>
+
       <Button
         variant="outlined"
         onClick={() => {

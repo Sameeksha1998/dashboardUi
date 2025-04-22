@@ -36,16 +36,21 @@ const Dashboard = () => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-      <AppBar position="static" sx={{ bgcolor: '#1976d2' }}>
+      <AppBar position="static" sx={{ bgcolor: 'rgb(244, 117, 96)' }}>
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Tabs
-            value={tab}
-            onChange={handleTabChange}
-            aria-label="Dashboard tabs"
-            textColor="inherit"
-            indicatorColor="secondary"
-            sx={{ flexGrow: 1 }}
-          >
+        <Tabs
+  value={tab}
+  onChange={handleTabChange}
+  aria-label="Dashboard tabs"
+  textColor="inherit"
+  TabIndicatorProps={{
+    style: {
+      backgroundColor: 'white', // this makes the underline white
+      height: '3px',             // optional: makes the underline a bit thicker
+    },
+  }}
+  sx={{ flexGrow: 1 }}
+>
             <Tab label="Metrics View" />
             <Tab label="Analytics View" />
           </Tabs>
