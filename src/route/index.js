@@ -5,7 +5,7 @@ import AnalyticsView from '../components/Analytics/AnalyticsView';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/dashboardUi">
       <Routes>
         <Route path="/" element={<Dashboard />}>
           <Route path="/" element={<MetricsView />} />
