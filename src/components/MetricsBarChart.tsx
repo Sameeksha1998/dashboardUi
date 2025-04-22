@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ResponsiveBar } from '@nivo/bar';
 import { DashboardEntry, MetricData, SelectedMetric  } from '../types';
 
