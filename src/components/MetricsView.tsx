@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Box, Typography, Tabs, Tab } from '@mui/material';
 import FilterPanel from '../Filters/FilterPanel';
 import MetricsTable from '../Filters/MetricsTable';
@@ -144,7 +144,8 @@ const groupBy = selectedAttributes[selectedAttributes.length - 1]?.toLowerCase()
 />
           </>
         ) : (
-          selectedMetrics.length === 1 && (
+          selectedMetrics.length === 1 ? 
+          (
             <Box mt={4}>
               <Typography variant="h6">
                 {selectedMetrics[0]} per {selectedAttributes[selectedAttributes.length - 1] || 'Category'}
@@ -156,6 +157,30 @@ const groupBy = selectedAttributes[selectedAttributes.length - 1]?.toLowerCase()
               />
             </Box>
           )
+          :
+          <Box
+          mt={2}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="200px"
+        >
+          <Typography
+            variant="body1"
+            color="textSecondary"
+            sx={{
+              textAlign: 'center',
+              backgroundColor: '#fff3cd',
+              padding: 2,
+              borderRadius: 2,
+              border: '1px solid #ffeeba',
+              maxWidth: 400,
+            }}
+          >
+            Please select <strong>exactly one metric</strong> you'd like to visualize in the bar chart.
+          </Typography>
+        </Box>
+        
         )}
       </Box>
     </Box>
