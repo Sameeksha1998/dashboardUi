@@ -1,0 +1,19 @@
+{
+   "users" : [
+    {
+      "id": "user1",
+      "name": "Alice Johnson",
+      "image": "https://randomuser.me/api/portraits/women/1.jpg"
+    },
+    {
+      "id": "user2",
+      "name": "Bob Smith",
+      "image": "https://randomuser.me/api/portraits/men/1.jpg"
+    },
+    {
+      "id": "user3",
+      "name": "Carol Lee",
+      "image": "https://randomuser.me/api/portraits/women/2.jpg"
+    }
+  ]
+}
